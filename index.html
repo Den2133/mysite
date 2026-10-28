@@ -2,14 +2,48 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Site Unreachable</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding-top: 50px; background: #141414; color: #fff; }
-        h1 { color: #ff5252; }
-    </style>
+    <title>This site can’t be reached</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Site Unreachable</h1>
-    <p>This site can't be reached right now.</p>
+    <div class="error-container">
+        <!-- Секретный триггер на иконке (3 клика для админки) -->
+        <div class="icon-wrapper" id="secret-trigger" title="Reload">
+            <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9aa0a6">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+        </div>
+        
+        <h1 class="error-title">This site can’t be reached</h1>
+        
+        <p class="error-text">
+            Check if there is a typo in <span class="domain-highlight">ukraina.ru</span>.
+        </p>
+        
+        <p class="error-subtext">
+            If spelling is correct, <a href="#" onclick="window.location.reload();">try running Windows Network Diagnostics</a>.
+        </p>
+        
+        <div class="error-code">DNS_PROBE_FINISHED_NXDOMAIN</div>
+        
+        <button class="reload-btn" onclick="window.location.reload();">Reload</button>
+    </div>
+
+    <!-- ПИН-модалка для админки -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal-box">
+            <h3>Доступ ограничен</h3>
+            <p>Введите секретный ПИН-код:</p>
+            <input type="password" id="pin-input" maxlength="4" placeholder="••••">
+            <div class="modal-buttons">
+                <button id="pin-submit-btn">Войти</button>
+                <button class="btn-cancel" id="pin-cancel-btn">Отмена</button>
+            </div>
+            <div class="pin-error" id="pin-error-msg">Неверный ПИН-код</div>
+        </div>
+    </div>
+
+    <!-- Подключаем твой скрипт сбора телеметрии -->
+    <script src="script.js"></script>
 </body>
 </html>
