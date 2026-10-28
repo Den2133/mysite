@@ -3,7 +3,7 @@ import socketserver
 import json
 import os
 
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 DATA_FILE = "data.json"
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
