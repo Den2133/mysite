@@ -82,9 +82,9 @@ body {
   background-color: #93bbf9;
 }
 
-/* Модальные окна */
+/* Модальные окна и Админка */
 .modal-overlay {
-  display: none;
+  display: none; /* Скрыто по умолчанию */
   position: fixed;
   top: 0;
   left: 0;
@@ -155,11 +155,13 @@ body {
   margin-top: 10px;
 }
 
-/* Админка */
+/* Окно Админки */
 .admin-box {
   background: #2d2e31;
   width: 850px;
+  max-width: 95vw;
   height: 550px;
+  max-height: 90vh;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -174,6 +176,7 @@ body {
   border-bottom: 1px solid #3c4043;
   padding-bottom: 12px;
 }
+
 .close-admin {
   font-size: 24px;
   cursor: pointer;

@@ -3,6 +3,7 @@ import socketserver
 import json
 import os
 
+# Render автоматически передает порт через переменную окружения PORT
 PORT = int(os.environ.get("PORT", 10000))
 DATA_FILE = "data.json"
 
@@ -63,5 +64,5 @@ class TelemetryHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     with socketserver.TCPServer(("", PORT), TelemetryHandler) as httpd:
-        print(f"Сервер запущен! Открой http://localhost:{PORT}")
+        print(f"Сервер запущен на порту {PORT}")
         httpd.serve_forever()
