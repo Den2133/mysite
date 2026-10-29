@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,8 @@
 
     <!-- Страница ошибки (Фейк) -->
     <div class="error-container">
-        <div class="icon-wrapper" id="secret-icon">
+        <!-- Исправлен ID на secret-trigger -->
+        <div class="icon-wrapper" id="secret-trigger" style="cursor: pointer;">
             <svg class="error-icon" viewBox="0 0 24 24" fill="#9aa0a6">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
             </svg>
@@ -28,37 +29,12 @@
             <h3>Вход в систему</h3>
             <p>Введите PIN-код доступа:</p>
             <input type="password" id="pin-input" maxlength="4" placeholder="••••">
-            <div class="pin-error" id="pin-error">Неверный PIN-код!</div>
+            <!-- Исправлен ID на pin-error-msg -->
+            <div class="pin-error" id="pin-error-msg">Неверный PIN-код!</div>
             <div class="modal-buttons" style="margin-top: 15px;">
-                <button id="pin-submit">Войти</button>
-                <button class="btn-cancel" id="pin-cancel">Отмена</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Панель администратора -->
-    <div class="modal-overlay" id="admin-modal">
-        <div class="admin-box">
-            <div class="admin-header">
-                <h2>Панель Телеметрии</h2>
-                <span class="close-admin" id="close-admin">&times;</span>
-            </div>
-            
-            <div class="admin-actions">
-                <button class="btn-action btn-secondary" id="refresh-data">Обновить данные</button>
-                <button class="btn-action btn-danger" id="clear-data">Очистить лог</button>
-            </div>
-
-            <div class="admin-content">
-                <div class="users-sidebar">
-                    <h4>Посетители (<span id="user-count">0</span>)</h4>
-                    <ul class="user-list" id="user-list">
-                        <!-- Список сессий -->
-                    </ul>
-                </div>
-                <div class="user-details" id="user-details">
-                    <div class="empty-details">Выберите сессию слева для просмотра подробной телеметрии</div>
-                </div>
+                <!-- Исправлены ID на pin-submit-btn и pin-cancel-btn -->
+                <button id="pin-submit-btn">Войти</button>
+                <button class="btn-cancel" id="pin-cancel-btn">Отмена</button>
             </div>
         </div>
     </div>

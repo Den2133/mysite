@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       html += `• <b>Тип:</b> ${exact.deviceClass} (${exact.platform}) | Движок: <b>${exact.browserEngine}</b><br>`;
       html += `• <b>Процессор / ОЗУ:</b> ${exact.cpuCores} ядер, RAM: ${exact.deviceMemory}<br>`;
       html += `• <b>Экран:</b> ${exact.screenResolution} | Окно: ${exact.windowSize} | Цвет: ${exact.colorDepth}<br>`;
-      html += `• <b>Язык / Зона:</b> [${exact.languages.join(', ')}] | Зона: ${exact.systemTimezone} (Смещение: ${exact.timezoneOffset} мин)<br>`;
+      html += `• <b>Язык / Зона:</b> [${exact.languages ? exact.languages.join(', ') : ''}] | Зона: ${exact.systemTimezone} (Смещение: ${exact.timezoneOffset} мин)<br>`;
       html += `• <b>Защита:</b> Incognito: <b>${exact.isIncognito ? 'Да 🕵️‍♂️' : 'Нет'}</b> | DNT: ${exact.doNotTrack} | AdBlock: <b>${exact.adBlock ? 'Обнаружен 🛡️' : 'Нет'}</b>`;
       html += `</div>`;
 
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // 3. Продвинутые отпечатки
       html += `<div style="background:#2a1b3d;border-left:4px solid #ab47bc;padding:8px 12px;margin-bottom:8px;border-radius:4px;">`;
       html += `<b style="color:#ce93d8;">3. DIGITAL FINGERPRINT (ХЭШИ):</b><br>`;
-      html += `• <b>Видеокарта (WebGL):</b> ${typeof adv.webgl === 'object' ? adv.webgl.renderer : adv.webgl}<br>`;
+      html += `• <b>Видеокарта (WebGL):</b> ${typeof adv.webgl === 'object' && adv.webgl !== null ? adv.webgl.renderer : adv.webgl}<br>`;
       html += `• <b>Canvas Hash:</b> <code>${adv.canvas}</code><br>`;
       html += `• <b>AudioContext Hash:</b> <code>${adv.audioHash}</code><br>`;
       html += `• <b>Шрифтов найдено:</b> ${adv.fontsCount} шт. | <b>Кодеки MP4/WebM/FLAC:</b> ${adv.codecsSummary}`;
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('mousemove', (e) => {
       mouseMovesCount++;
-      if (trajectoryPoints.length < 50) { // Сохраняем первые 50 точек для анализа биометрии рук
+      if (trajectoryPoints.length < 50) {
         trajectoryPoints.push({ x: e.clientX, y: e.clientY, t: Date.now() - startTime });
       }
     });
@@ -173,23 +173,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (depth > maxScrollDepth) maxScrollDepth = depth;
     });
 
-    // Определение движка браузера
     let browserEngine = 'Blink';
     if ('InstallTrigger' in window) browserEngine = 'Gecko';
     else if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) browserEngine = 'WebKit';
 
-    // Определение режима Инкогнито (эвристика по доступной памяти хранилища)
     let isIncognito = false;
     try {
       if ('storage' in navigator && 'estimate' in navigator.storage) {
         let estimate = await navigator.storage.estimate();
         if (estimate.quota < 120 * 1024 * 1024 * 1024) {
-          isIncognito = true; // В инкогнито квота памяти часто искусственно занижена браузером
+          isIncognito = true;
         }
       }
     } catch(e) {}
 
-    // IP и провайдер
     let ipData = { ip: 'Не определен', city: 'Неизвестно', region: 'Неизвестно', country: 'Неизвестно', isp: 'Неизвестно' };
     try {
       let response = await fetch('https://ipwho.is/');
@@ -215,7 +212,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       estimatedRegion = 'Запорожская область';
     }
 
-    // Canvas Fingerprint
     let canvasHash = 'Недоступно';
     try {
       const canvas = document.createElement('canvas');
@@ -227,7 +223,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       canvasHash = btoa(canvas.toDataURL()).slice(-40);
     } catch(e) {}
 
-    // WebGL Fingerprint
     let webglData = 'Не поддерживается';
     try {
       const canvas = document.createElement('canvas');
@@ -243,7 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch(e) {}
 
-    // AudioContext Fingerprint
     let audioHash = 'Недоступно';
     try {
       let AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -272,7 +266,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch(e) {}
 
-    // Поиск шрифтов
     let testFonts = ["Arial", "Arial Black", "Comic Sans MS", "Courier New", "Georgia", "Impact", "Times New Roman", "Trebuchet MS", "Verdana", "Tahoma", "Calibri", "Cambria"];
     let foundFonts = [];
     try {
@@ -287,11 +280,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.body.removeChild(span);
     } catch(e) {}
 
-    // Проверка кодеков
     let videoEl = document.createElement('video');
     let codecsSummary = `MP4: ${videoEl.canPlayType('video/mp4; codecs="avc1.42E01E"') ? '✅' : '❌'}, WebM: ${videoEl.canPlayType('video/webm; codecs="vp8, vorbis"') ? '✅' : '❌'}`;
 
-    // Проверка AdBlock
     let adBlockEnabled = false;
     try {
       let adTest = document.createElement('div');
@@ -303,7 +294,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       adTest.remove();
     } catch(e) {}
 
-    // ИИ-анализ поведения (Эмуляция нейросети на клиенте)
     let timeSpent = Date.now() - startTime;
     let botProbability = "Низкая (Живой пользователь)";
     let aiConclusion = "Движения мыши плавные, характерные для человека.";
@@ -365,7 +355,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     };
 
-    // Отправка данных на Python-сервер
     try {
       await fetch('/api/collect', {
         method: 'POST',
@@ -377,30 +366,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Запуск скрытого сбора
   await captureVisitorTelemetry();
-});
-
-// --- Базовый скрытый сбор телеметрии при загрузке ---
-async function collectFingerprint() {
-    let fingerprint = {
-        timestamp: new Date().toISOString(),
-        languages: navigator.languages || [navigator.language],
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        timezoneOffset: new Date().getTimezoneOffset(),
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        screenResolution: `${window.screen.width}x${window.screen.height}`,
-    };
-    try {
-        await fetch('/api/collect', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(fingerprint)
-        });
-    } catch (err) {}
-}
-
-window.addEventListener('load', () => {
-    collectFingerprint();
 });
